@@ -1,3 +1,5 @@
+/* -*- tab-width: 2 -*- */
+
 define(function() {
   function loaded(doc) {
 
@@ -48,8 +50,13 @@ define(function() {
 
       var list = $('#doclist');
       list.on('click', 'li', activateLi);
-      list.on('mouseenter', 'li.active.mine .docTitle', editTitle);
+      list.on('click', 'li.active.mine .docTitle', editTitle);
       list.on('blur', 'li.active.mine input.editTitle', saveTitle);
+      list.on('keypress', 'li.active.mine input.editTitle', function(e) {
+        if(e.which == 13) {
+          saveTitle(e);
+        }
+      });
 
       docs.attr('data-handlers', 'active');
     }
@@ -203,6 +210,8 @@ define(function() {
       var editor = li.find('.editor');
       var id = li.attr('id');
       var doc = localGet('documents')[id];
+      var title = li.find('.docTitle');
+      title.attr('title', "Click to edit title");
       if (!doc.data) {
         editor.pad({
           'padId':encodeURIComponent(id),
@@ -285,14 +294,17 @@ define(function() {
     function editTitle(e) {
       var title = $(e.currentTarget);
       var input = title.parent().find('input');
+      input.attr('disabled', false);
       input.show();
       title.hide();
+      input.focus();
     }
 
     function saveTitle(e) {
       var input = $(e.currentTarget);
       var li = input.parents('#doclist li').first();
       var title = li.find('.docTitle');
+      input.attr('disabled', true);
       editingDocTitle = false;
       doc = localGet('documents')[li.attr('id')];
       doc.title = input.val();
