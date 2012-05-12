@@ -267,6 +267,7 @@ define(function() {
       li.find('.editor').empty();
       li.find('.editTitle').hide();
       li.find('.docTitle').show();
+      li.find('.docTitle').removeAttr('title');
       li.removeClass('active')
       updateTime(li.attr('id'));
     }
